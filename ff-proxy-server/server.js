@@ -8,8 +8,13 @@ const https = require('https'); // Node.js built-in HTTPS module
 const app = express();
 const PORT = process.env.PORT || 3000; // Use environment variable for port or default to 3000
 
-// Enable CORS for all routes to allow frontend access
-app.use(cors());
+// Define the allowed origin for CORS
+const allowedOrigin = 'https://skorpionop.github.io'; // Allow requests from this specific domain
+
+// Configure CORS to only allow the specified origin
+app.use(cors({
+    origin: allowedOrigin
+}));
 
 // Middleware to parse JSON bodies (useful if you expand to POST requests later)
 app.use(express.json());
