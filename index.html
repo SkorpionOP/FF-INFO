@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Fire Player Info</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center mb-8 text-[#00d1b2]">Free Fire Player Info</h1>
+
+        <div class="flex flex-col md:flex-row gap-4 mb-6">
+            <div class="input-group flex-1">
+                <label for="uidInput" class="block text-sm font-medium text-gray-400 mb-1">Player UID:</label>
+                <input type="text" id="uidInput" placeholder="Enter Player UID" value="762812190"
+                       class="w-full text-base">
+            </div>
+            <div class="input-group flex-1">
+                <label for="regionSelect" class="block text-sm font-medium text-gray-400 mb-1">Region:</label>
+                <select id="regionSelect" class="w-full text-base">
+                    <option value="ind">India</option>
+                    <option value="id">Indonesia</option>
+                    <option value="na">North America</option>
+                    <option value="pk">Pakistan</option>
+                    <option value="br">Brazil</option>
+                    <option value="me">Middle East & Africa</option>
+                    <option value="sg">Singapore</option>
+                    <option value="bd">Bangladesh</option>
+                    <option value="tw">Taiwan</option>
+                    <option value="th">Thailand</option>
+                    <option value="vn">Vietnam</option>
+                    <option value="cis">CIS</option>
+                    <option value="eu">Europe</option>
+                    <option value="sac">Latam</option>
+                    <option value="ind-hn">India Hindi</option>
+                </select>
+            </div>
+            <button id="fetchBtn" class="btn mt-auto">Fetch Player Info</button>
+        </div>
+
+        <div id="loadingMessage" class="loading-message hidden">
+            Loading player data...
+        </div>
+        <div id="errorMessage" class="error-message hidden">
+            An error occurred. Please try again.
+        </div>
+
+        <div id="playerInfoOutput" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            </div>
+    </div>
+
+<script src="script.js"></script>
+</body>
+</html>
