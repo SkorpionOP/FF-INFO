@@ -21,7 +21,8 @@ app.use(express.json());
 
 // --- Define the actual external API base URLs ---
 const EXTERNAL_PLAYER_INFO_API_BASE = 'https://ariiflexlabs-playerinfo-icxc.onrender.com';
-const EXTERNAL_IMAGE_API_BASE = 'https://system.ffgarena.cloud/api/iconsff';
+// UPDATED: New image API base URL
+const EXTERNAL_IMAGE_API_BASE = 'https://freefireinfo.vercel.app/icon';
 // -------------------------------------------------
 
 // Proxy route for fetching Player Information
@@ -92,10 +93,14 @@ app.get('/api/ff/images', async (req, res) => {
     }
 
     try {
+        // Extract the numeric ID from iconName (e.g., "203000449.png" -> "203000449")
+        // The new API expects 'id' parameter, not 'iconName' with .png suffix.
+        const id = iconName.replace(/\.png$/i, ''); // Remove .png extension if present
+
         // Construct the URL for the external image API
-        const externalApiUrl = `${EXTERNAL_IMAGE_API_BASE}`; // Base URL already includes /api/iconsff
-        const response = await axios.get(externalApiUrl, {
-            params: { image: iconName }, // The external API expects 'image' parameter
+        // UPDATED: Use 'id' parameter for the new image API
+        const response = await axios.get(EXTERNAL_IMAGE_API_BASE, {
+            params: { id: id }, // The new external API expects 'id' parameter
             responseType: 'arraybuffer' // Important: tells Axios to expect binary data
         });
 
