@@ -6,7 +6,343 @@
     <title>Free Fire Player Info</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
+    <style>
+        /* Global styles for body and overall layout */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a; /* Even deeper, richer black */
+            color: #e0e0e0; /* Light text */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            padding: 20px; /* Overall padding around the container */
+            overflow-y: auto; /* Allow scrolling if content overflows */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+
+        /* Main container for the application */
+        .container {
+            background-color: #1c1c1c; /* Darker than body for clear distinction, slightly warmer black */
+            border-radius: 20px; /* More pronounced rounded corners for a modern feel */
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8); /* Stronger, diffused shadow for depth */
+            padding: 40px; /* Increased padding inside container */
+            max-width: 1000px; /* Wider max-width for more content space */
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border for definition */
+            animation: fadeInScale 0.7s ease-out; /* Add entry animation */
+        }
+
+        /* Keyframe for container entry animation */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Styles for input fields and select dropdown */
+        .input-group input, .input-group select {
+            background-color: #262626; /* Dark input fields */
+            border: 1px solid #555555; /* Slightly softer border */
+            color: #f0f0f0; /* Brighter text in inputs */
+            padding: 16px; /* More padding */
+            border-radius: 12px; /* More rounded inputs */
+            font-size: 1.05rem; /* Slightly larger font */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #00f0c0; /* Brighter accent on focus */
+            box-shadow: 0 0 18px rgba(0, 240, 192, 0.6); /* Enhanced focus shadow */
+            background-color: #333333; /* Slightly lighter on focus */
+        }
+
+        /* Styles for buttons */
+        .btn {
+            background-color: #00d1b2; /* Accent color */
+            color: #fff;
+            padding: 16px 32px; /* More padding */
+            border-radius: 12px; /* More rounded buttons */
+            font-weight: 700; /* Bolder text */
+            font-size: 1.1rem; /* Slightly larger font */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 209, 178, 0.4); /* More prominent shadow */
+            cursor: pointer;
+            border: none; /* Remove default button border */
+            letter-spacing: 0.5px; /* Slightly spaced letters */
+        }
+        .btn:hover {
+            background-color: #00b89c; /* Darker accent on hover */
+            transform: translateY(-5px); /* More pronounced lift */
+            box-shadow: 0 10px 25px rgba(0, 209, 178, 0.5); /* Enhanced shadow on hover */
+        }
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 209, 178, 0.2);
+        }
+
+        /* Styles for information cards */
+        .info-card {
+            background-color: #252525; /* Card background */
+            border-radius: 16px; /* Slightly more rounded cards */
+            padding: 30px; /* More padding */
+            margin-bottom: 25px; /* More space between cards */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); /* Deeper card shadow */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.06); /* Subtle card border */
+        }
+        .info-card:hover {
+            transform: translateY(-4px); /* More pronounced lift on hover */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+        .info-card h3 {
+            color: #00f0c0; /* Brighter accent for headings */
+            font-size: 1.6rem; /* Larger heading */
+            margin-bottom: 20px; /* More space below heading */
+            border-bottom: 2px solid rgba(0, 240, 192, 0.5); /* Brighter accent line */
+            padding-bottom: 12px;
+            text-shadow: 0 0 8px rgba(0, 240, 192, 0.3); /* Subtle text shadow */
+        }
+        .info-card p {
+            margin-bottom: 12px; /* More space between paragraphs */
+            font-size: 1.05rem; /* Slightly larger font size */
+            line-height: 1.7;
+        }
+        .info-card p strong {
+            color: #e0e0e0; /* Lighter strong text for emphasis */
+            font-weight: 600;
+        }
+
+        /* Styles for image grid within cards */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Larger min-width for images */
+            gap: 20px; /* Increased gap */
+            margin-top: 25px; /* More space above grid */
+        }
+
+        /* Styles for individual image and name wrappers */
+        .image-name-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 10px; /* Increased space between image and name */
+            background-color: #2f2f2f; /* Background for each item */
+            border-radius: 14px; /* More rounded wrapper */
+            padding: 12px; /* More padding */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer; /* Indicate clickability */
+        }
+        .image-name-wrapper:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+        .image-name-wrapper img {
+            width: 100%;
+            height: 100px; /* Larger fixed height for consistency */
+            object-fit: contain;
+            border-radius: 12px; /* More rounded image */
+            background-color: #444444; /* Darker background for image area */
+            padding: 10px; /* More padding around image */
+            transition: transform 0.2s ease;
+        }
+        .image-name-wrapper img:hover {
+            transform: scale(1.1); /* More pronounced zoom on hover */
+        }
+        .image-name-wrapper .item-name-text {
+            font-size: 0.8rem; /* Slightly larger text for names */
+            color: #d0d0d0; /* Lighter gray for names */
+            word-break: break-word;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* Styles for error messages */
+        .error-message {
+            color: #ff9999; /* Softer, slightly brighter red for errors */
+            background-color: #5a2a2a; /* Darker red background */
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 35px;
+            text-align: center;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+        }
+
+        /* Styles for loading messages */
+        .loading-message {
+            color: #00ffcc; /* Brighter accent for loading */
+            text-align: center;
+            margin-top: 35px;
+            font-size: 1.3rem; /* Larger loading text */
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                border-radius: 16px;
+            }
+            .input-group input, .input-group select, .btn {
+                padding: 12px;
+                font-size: 0.95rem;
+                border-radius: 10px;
+            }
+            .info-card {
+                padding: 20px;
+                border-radius: 14px;
+            }
+            .info-card h3 {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+            .info-card p {
+                font-size: 0.9rem;
+                margin-bottom: 8px;
+            }
+            .image-grid {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 12px;
+            }
+            .image-name-wrapper {
+                padding: 8px;
+                border-radius: 10px;
+            }
+            .image-name-wrapper img {
+                height: 80px;
+                padding: 6px;
+                border-radius: 8px;
+            }
+            .image-name-wrapper .item-name-text {
+                font-size: 0.65rem;
+            }
+            .error-message, .loading-message {
+                padding: 12px;
+                font-size: 1rem;
+                margin-top: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+                border-radius: 12px;
+            }
+            .flex-col.md:flex-row {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+                margin-top: 15px;
+            }
+            .input-group {
+                margin-bottom: 10px;
+            }
+            .image-grid {
+                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+                gap: 8px;
+            }
+            .image-name-wrapper img {
+                height: 60px;
+            }
+            .image-name-wrapper .item-name-text {
+                font-size: 0.6rem;
+            }
+        }
+
+        /* Modal specific styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #1c1c1c;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #bbb;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .modal-close-btn:hover {
+            color: #fff;
+        }
+
+        .modal-image {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 12px;
+            background-color: #444444;
+            padding: 10px;
+            margin: 0 auto 20px auto;
+            display: block;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00f0c0;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .modal-details p {
+            margin-bottom: 8px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .modal-details p strong {
+            color: #e0e0e0;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -15,7 +351,7 @@
         <div class="flex flex-col md:flex-row gap-4 mb-6">
             <div class="input-group flex-1">
                 <label for="uidInput" class="block text-sm font-medium text-gray-400 mb-1">Player UID:</label>
-                <input type="text" id="uidInput" placeholder="Enter Player UID" value=""
+                <input type="text" id="uidInput" placeholder="Enter Player UID" value="762812190"
                        class="w-full text-base">
             </div>
             <div class="input-group flex-1">
@@ -52,6 +388,470 @@
             </div>
     </div>
 
-<script src="script.js"></script>
+    <div id="itemDetailsModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
+            <img id="modalItemImage" class="modal-image" src="" alt="Item Image">
+            <h3 id="modalItemName" class="modal-title"></h3>
+            <div id="modalItemDetails" class="modal-details text-gray-300">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // Get references to DOM elements
+        const uidInput = document.getElementById('uidInput');
+        const regionSelect = document.getElementById('regionSelect');
+        const fetchBtn = document.getElementById('fetchBtn');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const playerInfoOutput = document.getElementById('playerInfoOutput');
+
+        // Modal elements
+        const itemDetailsModal = document.getElementById('itemDetailsModal');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        const modalItemImage = document.getElementById('modalItemImage');
+        const modalItemName = document.getElementById('modalItemName');
+        const modalItemDetails = document.getElementById('modalItemDetails');
+
+
+        // Base URLs for the APIs
+        const PLAYER_INFO_API_BASE = 'http://localhost:3000/api/ff/data';
+        const IMAGE_API_BASE = 'http://localhost:3000/api/ff/images';
+
+        // Global variable to store all item data (including app.json and skills.json)
+        let appItemsData = [];
+
+        /**
+         * Loads the app.json data and the new character skills JSON data from local files.
+         * Merges them into appItemsData.
+         */
+        async function loadAppItemsData() {
+            try {
+                // Fetch app.json
+                const appResponse = await fetch('app.json');
+                if (!appResponse.ok) {
+                    throw new Error(`HTTP error! status: ${appResponse.status} for app.json`);
+                }
+                const appData = await appResponse.json();
+                appItemsData = [...appData]; // Initialize with app.json data
+                console.log('app.json loaded successfully. Total items:', appData.length);
+
+                // Fetch character_skills.json (assuming this is the name of your new file)
+                const skillsResponse = await fetch('character_skills.json');
+                if (!skillsResponse.ok) {
+                    throw new Error(`HTTP error! status: ${skillsResponse.status} for character_skills.json`);
+                }
+                const skillsData = await skillsResponse.json();
+                appItemsData = [...appItemsData, ...skillsData]; // Merge skills data
+                console.log('character_skills.json loaded successfully. Total skills:', skillsData.length);
+                console.log('Combined appItemsData length:', appItemsData.length);
+
+            } catch (error) {
+                console.error('Failed to load item definitions:', error);
+                errorMessage.textContent = `Failed to load item definitions (${error.message}). Image lookup may be incomplete.`;
+                errorMessage.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Helper function to get full item details by ID from the combined appItemsData.
+         * @param {string|number} itemId - The ID of the item to look up.
+         * @returns {object|null} The item object if found, or null.
+         */
+        function getItemDetails(itemId) {
+            const itemIdStr = String(itemId);
+            return appItemsData.find(entry => String(entry.itemID) === itemIdStr || String(entry.Item_ID) === itemIdStr);
+        }
+
+        /**
+         * Determines the numeric Item_ID to use for image fetching.
+         * It prioritizes finding the Item_ID from appItemsData based on new and old JSON structures.
+         * If no match is found, it falls back to the original rawItemId, assuming it's already a numeric ID.
+         * @param {string|number} rawItemId - The raw ID (could be numeric Item_ID, itemID, Icon_Name, or icon string).
+         * @returns {string} The numeric Item_ID string to use for image fetching.
+         */
+        function getNumericItemIdForImage(rawItemId) {
+            const rawItemIdStr = String(rawItemId);
+
+            // Prioritize new structure: itemID
+            const itemByNewId = appItemsData.find(entry => String(entry.itemID) === rawItemIdStr);
+            if (itemByNewId) {
+                return String(itemByNewId.itemID);
+            }
+
+            // Fallback to old structure: Item_ID
+            const itemByOldId = appItemsData.find(entry => String(entry.Item_ID) === rawItemIdStr);
+            if (itemByOldId) {
+                return String(itemByOldId.Item_ID);
+            }
+
+            // If rawItemId is an 'icon' name from the new structure, find its itemID
+            const itemByNewIconName = appItemsData.find(entry => entry.icon === rawItemIdStr);
+            if (itemByNewIconName) {
+                return String(itemByNewIconName.itemID);
+            }
+
+            // If rawItemId is an 'Icon_Name' from the old structure, find its Item_ID
+            const itemByOldIconName = appItemsData.find(entry => entry.Icon_Name === rawItemIdStr);
+            if (itemByOldIconName) {
+                return String(itemByOldIconName.Item_ID);
+            }
+
+            // If no match found, assume the rawItemId itself is the numeric ID
+            return rawItemIdStr;
+        }
+
+        /**
+         * Gets the human-readable name of an item from appItemsData.
+         * It checks for 'description' first (new structure), then 'Name' (old structure).
+         * @param {string|number} itemId - The Item_ID to look up.
+         * @returns {string} The Name or description of the item if found, or 'Unknown Item'.
+         */
+        function getItemName(itemId) {
+            const item = getItemDetails(itemId);
+            if (item) {
+                return item.description || item.Name || 'Unknown Item'; // Prioritize 'description'
+            }
+            return 'Unknown Item';
+        }
+
+        /**
+         * Converts a Unix timestamp (seconds) to a formatted date and time string (DD/MM/YYYY hh:mm AM/PM IST).
+         * @param {number} timestamp - Unix timestamp in seconds.
+         * @returns {string} Formatted date and time string.
+         */
+        function formatUnixTimestampToIST(timestamp) {
+            const date = new Date(timestamp * 1000); // Convert seconds to milliseconds
+            const istOffsetMs = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+            const istDate = new Date(date.getTime() + istOffsetMs); // Apply IST offset
+
+            const hours = istDate.getUTCHours();
+            const minutes = istDate.getUTCMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const formattedHours = hours % 12 || 12;
+            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+
+            const formattedDate = `${istDate.getUTCDate().toString().padStart(2, '0')}/${(istDate.getUTCMonth() + 1).toString().padStart(2, '0')}/${istDate.getUTCFullYear()}`;
+            const formattedTime = `${formattedHours}:${formattedMinutes} ${ampm}`;
+
+            return `${formattedDate} ${formattedTime}`;
+        }
+
+        /**
+         * Creates an image element with error handling, ensuring a numeric Item_ID is used for the URL.
+         * @param {string|number} rawItemId - The raw ID (could be numeric Item_ID or an existing Icon_Name) to fetch the image for.
+         * @param {string} altText - Alt text for the image.
+         * @returns {HTMLImageElement} The created image element.
+         */
+        function createImageElement(rawItemId, altText) {
+            const img = document.createElement('img');
+            let imageIdToUse = getNumericItemIdForImage(rawItemId);
+
+            // The new image API (freefireinfo.vercel.app/icon?id=) does NOT need .png suffix,
+            // it expects just the ID. So, remove it if present.
+            imageIdToUse = imageIdToUse.replace(/\.png$/i, '');
+
+            img.src = `${IMAGE_API_BASE}?iconName=${imageIdToUse}`;
+            img.alt = altText;
+            img.className = 'w-full h-20 object-contain rounded-md bg-gray-700 p-1';
+            img.onerror = () => {
+                // Fallback to a placeholder image if the actual image fails to load
+                img.src = `https://placehold.co/80x80/333333/FFFFFF?text=No+Image`;
+                img.alt = `Image not found for ${altText} (ID: ${rawItemId})`;
+                console.warn(`Could not load image for: ${imageIdToUse} (from raw ID: ${rawItemId}). External API might not have this image or the ID mapping is incorrect.`);
+            };
+            return img;
+        }
+
+
+        /**
+         * Creates a container div holding an image and its corresponding name, and makes it clickable.
+         * @param {string|number} itemId - The raw ID of the item.
+         * @param {string} altPrefix - Prefix for the alt text (e.g., "Account Avatar", "Outfit Item").
+         * @returns {HTMLDivElement} A div containing the image and its name.
+         */
+        function createImageWithNameWrapper(itemId, altPrefix) {
+            const itemName = getItemName(itemId);
+            const itemWrapper = document.createElement('div');
+            itemWrapper.className = 'image-name-wrapper';
+            itemWrapper.onclick = () => showItemDetailsModal(itemId); // Make the wrapper clickable
+
+            const imgElement = createImageElement(itemId, `${altPrefix}: ${itemName}`);
+            itemWrapper.appendChild(imgElement);
+
+            const nameElement = document.createElement('p');
+            nameElement.className = 'item-name-text';
+            nameElement.textContent = itemName;
+            itemWrapper.appendChild(nameElement);
+
+            return itemWrapper;
+        }
+
+        /**
+         * Creates a list of details for an item (description2, Rare, itemType).
+         * @param {object} itemDetails - The full item object from appItemsData.
+         * @returns {string} HTML string for the details list.
+         */
+        function createItemDetailsList(itemDetails) {
+            let detailsHtml = '';
+            if (itemDetails) {
+                if (itemDetails.description2 && itemDetails.description2 !== "NONE") {
+                    detailsHtml += `<p><strong>Description:</strong> ${itemDetails.description2}</p>`;
+                }
+                if (itemDetails.Rare) {
+                    detailsHtml += `<p><strong>Rarity:</strong> ${itemDetails.Rare}</p>`;
+                }
+                if (itemDetails.itemType) {
+                    detailsHtml += `<p><strong>Type:</strong> ${itemDetails.itemType}</p>`;
+                }
+            }
+            return detailsHtml;
+        }
+
+        /**
+         * Displays the item details modal with information for the given item ID.
+         * @param {string|number} itemId - The ID of the item to display details for.
+         */
+        function showItemDetailsModal(itemId) {
+            const itemDetails = getItemDetails(itemId);
+            if (itemDetails) {
+                modalItemImage.src = createImageElement(itemId, getItemName(itemId)).src; // Re-use image creation logic for modal
+                modalItemImage.alt = getItemName(itemId);
+                modalItemName.textContent = getItemName(itemId);
+                modalItemDetails.innerHTML = createItemDetailsList(itemDetails);
+                itemDetailsModal.classList.add('show');
+            } else {
+                console.warn(`No details found for item ID: ${itemId}`);
+                errorMessage.textContent = `Details not found for item ID: ${itemId}.`;
+                errorMessage.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Hides the item details modal.
+         */
+        function hideItemDetailsModal() {
+            itemDetailsModal.classList.remove('show');
+        }
+
+
+        /**
+         * Displays the fetched player data in the UI.
+         * @param {object} data - The JSON data received from the player info API.
+         */
+        function displayPlayerData(data) {
+            playerInfoOutput.innerHTML = ''; // Clear previous content
+
+            // Account Info Card
+            const accountInfo = data.AccountInfo;
+            if (accountInfo) {
+                const accountCard = document.createElement('div');
+                accountCard.className = 'info-card col-span-1 md:col-span-2';
+
+                const avatarBannerContainer = document.createElement('div');
+                avatarBannerContainer.className = 'flex items-center gap-4 mb-4';
+
+                // Account Avatar and Banner are now clickable
+                avatarBannerContainer.appendChild(createImageWithNameWrapper(accountInfo.AccountAvatarId, 'Account Avatar'));
+                avatarBannerContainer.appendChild(createImageWithNameWrapper(accountInfo.AccountBannerId, 'Account Banner'));
+
+                accountCard.innerHTML = `
+                    <h3 class="text-xl font-semibold mb-3">Account Information</h3>
+                `;
+                accountCard.appendChild(avatarBannerContainer);
+
+                accountCard.innerHTML += `
+                    <p><strong>Name:</strong> ${accountInfo.AccountName}</p>
+                    <p><strong>Level:</strong> ${accountInfo.AccountLevel}</p>
+                    <p><strong>Region:</strong> ${accountInfo.AccountRegion}</p>
+                    <p><strong>Likes:</strong> ${accountInfo.AccountLikes}</p>
+                    <p><strong>Last Login:</strong> ${formatUnixTimestampToIST(accountInfo.AccountLastLogin)}</p>
+                    <p><strong>Created At:</strong> ${formatUnixTimestampToIST(accountInfo.AccountCreateTime)}</p>
+                    <p><strong>Release Version:</strong> ${accountInfo.ReleaseVersion}</p>
+                    <p><strong>BR Max Rank:</strong> ${accountInfo.BrMaxRank} (Points: ${accountInfo.BrRankPoint})</p>
+                    <p><strong>CS Max Rank:</strong> ${accountInfo.CsMaxRank} (Points: ${accountInfo.CsRankPoint})</p>
+                `;
+                // Title is also clickable now
+                const titleItem = getItemDetails(accountInfo.Title);
+                if (titleItem) {
+                    const titleWrapper = createImageWithNameWrapper(accountInfo.Title, 'Title');
+                    titleWrapper.querySelector('.item-name-text').textContent = `Title: ${getItemName(accountInfo.Title)}`; // Prepend "Title: "
+                    accountCard.appendChild(titleWrapper);
+                }
+                playerInfoOutput.appendChild(accountCard);
+            }
+
+            // Guild Info Card
+            const guildInfo = data.GuildInfo;
+            if (guildInfo && guildInfo.GuildName) {
+                const guildCard = document.createElement('div');
+                guildCard.className = 'info-card';
+                guildCard.innerHTML = `
+                    <h3 class="text-xl font-semibold mb-3">Guild Information</h3>
+                    <p><strong>Name:</strong> ${guildInfo.GuildName}</p>
+                    <p><strong>ID:</strong> ${guildInfo.GuildID}</p>
+                    <p><strong>Level:</strong> ${guildInfo.GuildLevel}</p>
+                    <p><strong>Members:</strong> ${guildInfo.GuildMember}/${guildInfo.GuildCapacity}</p>
+                    <p><strong>Owner UID:</strong> ${guildInfo.GuildOwner}</p>
+                `;
+                playerInfoOutput.appendChild(guildCard);
+            }
+
+            // Equipped Outfit Card
+            const equippedOutfit = data.AccountProfileInfo?.EquippedOutfit;
+            if (equippedOutfit && equippedOutfit.length > 0) {
+                const outfitCard = document.createElement('div');
+                outfitCard.className = 'info-card';
+                outfitCard.innerHTML = `
+                    <h3 class="text-xl font-semibold mb-3">Equipped Outfit</h3>
+                    <div class="image-grid"></div>
+                `;
+                const imageGrid = outfitCard.querySelector('.image-grid');
+                equippedOutfit.forEach(itemId => {
+                    imageGrid.appendChild(createImageWithNameWrapper(itemId, 'Outfit Item'));
+                });
+                playerInfoOutput.appendChild(outfitCard);
+            }
+
+            // Equipped Weapon Card
+            const equippedWeapon = data.AccountInfo?.EquippedWeapon;
+            const captainEquippedWeapon = data.captainBasicInfo?.EquippedWeapon;
+
+            const allEquippedWeapons = [];
+            if (equippedWeapon) allEquippedWeapons.push(...equippedWeapon);
+            if (captainEquippedWeapon) allEquippedWeapons.push(...captainEquippedWeapon);
+            const uniqueEquippedWeapons = [...new Set(allEquippedWeapons)];
+
+            if (uniqueEquippedWeapons.length > 0) {
+                const weaponCard = document.createElement('div');
+                weaponCard.className = 'info-card';
+                weaponCard.innerHTML = `
+                    <h3 class="text-xl font-semibold mb-3">Equipped Weapons</h3>
+                    <div class="image-grid"></div>
+                `;
+                const imageGrid = weaponCard.querySelector('.image-grid');
+                uniqueEquippedWeapons.forEach(itemId => {
+                    imageGrid.appendChild(createImageWithNameWrapper(itemId, 'Weapon Skin'));
+                });
+                playerInfoOutput.appendChild(weaponCard);
+            }
+
+            // Character Skills Card
+
+
+            // Social Info Card
+            const socialInfo = data.socialinfo;
+            if (socialInfo) {
+                const socialCard = document.createElement('div');
+                socialCard.className = 'info-card';
+                socialCard.innerHTML = `
+                    <h3 class="text-xl font-semibold mb-3">Social Information</h3>
+                    <p><strong>Language:</strong> ${socialInfo.AccountLanguage}</p>
+                    <p><strong>Preferred Mode:</strong> ${socialInfo.AccountPreferMode}</p>
+                    <p><strong>Signature:</strong> ${socialInfo.AccountSignature}</p>
+                `;
+                playerInfoOutput.appendChild(socialCard);
+            }
+
+            // Credit Score Info Card
+            const creditScoreInfo = data.creditScoreInfo;
+            if (creditScoreInfo) {
+                const creditCard = document.createElement('div');
+                creditCard.className = 'info-card';
+                creditCard.innerHTML = `
+                    <h3 class="text-xl font-semibold mb-3">Credit Score</h3>
+                    <p><strong>Score:</strong> ${creditScoreInfo.creditScore}</p>
+                    <p><strong>Summary Start:</strong> ${formatUnixTimestampToIST(creditScoreInfo.periodicSummaryStartTime)}</p>
+                    <p><strong>Summary End:</strong> ${formatUnixTimestampToIST(creditScoreInfo.periodicSummaryEndTime)}</p>
+                `;
+                playerInfoOutput.appendChild(creditCard);
+            }
+
+            // Pet Info Card
+            const petInfo = data.petInfo;
+            if (petInfo) {
+                const petCard = document.createElement('div');
+                petCard.className = 'info-card';
+                petCard.innerHTML = `
+                    <h3 class="text-xl font-semibold mb-3">Pet Information</h3>
+                    <p><strong>ID:</strong> ${petInfo.id} ${petInfo.isSelected ? '(Selected)' : ''}</p>
+                    <p><strong>Level:</strong> ${petInfo.level}</p>
+                    <p><strong>EXP:</strong> ${petInfo.exp}</p>
+                    <p><strong>Skill ID:</strong> ${petInfo.selectedSkillId}</p>
+                    <p><strong>Skin ID:</strong> ${petInfo.skinId}</p>
+                    <div class="image-grid">
+                        ${createImageWithNameWrapper(petInfo.skinId, 'Pet Skin').outerHTML}
+                        ${createImageWithNameWrapper(petInfo.selectedSkillId, 'Pet Skill').outerHTML}
+                    </div>
+                `;
+                playerInfoOutput.appendChild(petCard);
+            }
+        }
+
+        /**
+         * Fetches player data from the API and displays it.
+         */
+        async function fetchPlayerData() {
+            const uid = uidInput.value.trim();
+            const region = regionSelect.value;
+
+            if (!uid) {
+                errorMessage.textContent = 'Please enter a Player UID.';
+                errorMessage.classList.remove('hidden');
+                playerInfoOutput.innerHTML = '';
+                return;
+            }
+
+            loadingMessage.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+            playerInfoOutput.innerHTML = ''; // Clear previous data
+
+            try {
+                const apiUrl = `${PLAYER_INFO_API_BASE}?uid=${uid}&region=${region}`;
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                    throw new Error(`API Error: ${response.status} - ${errorData.message || response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched Data:', data); // Log the full data for debugging
+
+                if (data.error) {
+                    errorMessage.textContent = `Error: ${data.error}`;
+                    errorMessage.classList.remove('hidden');
+                } else if (data.AccountInfo && data.AccountInfo.AccountName) {
+                    displayPlayerData(data);
+                } else {
+                    errorMessage.textContent = 'Player data not found or invalid response. Check UID and Region.';
+                    errorMessage.classList.remove('hidden');
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                errorMessage.textContent = `Failed to fetch data: ${error.message}. Please check UID/Region or try again later.`;
+                errorMessage.classList.remove('hidden');
+            } finally {
+                loadingMessage.classList.add('hidden');
+            }
+        }
+
+        // Add event listener to the fetch button
+        fetchBtn.addEventListener('click', fetchPlayerData);
+        modalCloseBtn.addEventListener('click', hideItemDetailsModal);
+        itemDetailsModal.addEventListener('click', (event) => {
+            if (event.target === itemDetailsModal) { // Close when clicking outside the modal content
+                hideItemDetailsModal();
+            }
+        });
+
+
+        // Load app.json data and then fetch player data on initial load with default values
+        loadAppItemsData().then(() => {
+            fetchPlayerData();
+        });
+    </script>
 </body>
 </html>
